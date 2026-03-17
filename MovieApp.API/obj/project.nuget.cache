@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "dgSpecHash": "qQzk1qpaMaY=",
+  "success": true,
+  "projectFilePath": "D:\\Movie-management-System\\Movie-management-App\\MovieApp.API\\MovieApp.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\irisuser\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.8\\microsoft.aspnetcore.openapi.9.0.8.nupkg.sha512",
+    "C:\\Users\\irisuser\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://buildsystem-production-main-640232009733.d.codeartifact.eu-west-2.amazonaws.com/nuget/nuget-group/v3/index.json.",
+      "projectPath": "D:\\Movie-management-System\\Movie-management-App\\MovieApp.API\\MovieApp.API.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\Movie-management-System\\Movie-management-App\\MovieApp.API\\MovieApp.API.csproj",
+      "targetGraphs": []
+    }
+  ]
+}
