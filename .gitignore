@@ -1,13 +1,20 @@
-# Build folders
+# =========================
+# .NET / C#
+# =========================
 bin/
 obj/
-
-# VS Code
-.vscode/
-
-# User-specific files
 *.user
 *.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / VS / VS Code
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 # Logs
 *.log
@@ -15,3 +22,57 @@ obj/
 # OS files
 .DS_Store
 Thumbs.db
+
+# =========================
+# NuGet
+# =========================
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.*
+appsettings.Development.json
+appsettings.Local.json
+
+# ⚠️ Keep appsettings.json (needed to run)
+
+# =========================
+# Angular / Node
+# =========================
+node_modules/
+dist/
+.angular/
+coverage/
+
+# npm logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Test Results
+# =========================
+TestResults/
+*.trx
+
+# =========================
+# Database / Local files
+# =========================
+*.db
+*.sqlite
+*.mdf
+*.ldf
+
+# PostgreSQL dumps (if any)
+*.sql
+
+# =========================
+# Misc
+# =========================
+*.cache
+*.tmp
