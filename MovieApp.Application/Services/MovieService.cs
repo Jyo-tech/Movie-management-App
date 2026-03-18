@@ -1,5 +1,6 @@
 using MovieApp.Application.DTOs;
 using MovieApp.Application.Interfaces;
+using MovieApp.Domain.Entities;
 using MovieApp.Domain.Interfaces;
 
 namespace MovieApp.Application.Services;
@@ -17,30 +18,42 @@ public class MovieService : IMovieService
     {
         var movies = await _movieRepository.GetLatestMoviesAsync(count);
         
-        // Manual mapping from Domain Entity to Application DTO
-        return movies.Select(m => new MovieDto
-        {
-            Id = m.Id,
-            Title = m.Title,
-            Year = m.Year,
-            Directors = m.Directors,
-            ReleaseDate = m.ReleaseDate,
-            Rating = m.Rating,
-            Genres = m.Genres,
-            Actors = m.Actors,
-            ImageUrl = m.ImageUrl,
-            Plot = m.Plot,
-            Rank = m.Rank,
-            RunningTimeSecs = m.RunningTimeSecs
-        });
+        return movies.Select(m => MapToDto(m));
     }
 
     public async Task<IEnumerable<MovieDto>> SearchMoviesAsync(string? title, string? genre, int? year)
     {
         var movies = await _movieRepository.SearchAsync(title, genre, year);
         
-        // Manual mapping from Domain Entity to Application DTO
-        return movies.Select(m => new MovieDto
+        return movies.Select(m => MapToDto(m));
+    }
+
+    public async Task<MovieDto> CreateMovieAsync(MovieDto movieDto)
+    {
+        var movie = new Movie
+        {
+            Title = movieDto.Title,
+            Year = movieDto.Year,
+            Directors = movieDto.Directors,
+            ReleaseDate = movieDto.ReleaseDate,
+            Rating = movieDto.Rating,
+            Genres = movieDto.Genres,
+            Actors = movieDto.Actors,
+            ImageUrl = movieDto.ImageUrl,
+            Plot = movieDto.Plot,
+            Rank = movieDto.Rank,
+            RunningTimeSecs = movieDto.RunningTimeSecs
+        };
+
+        await _movieRepository.AddAsync(movie);
+        await _movieRepository.SaveChangesAsync();
+
+        return MapToDto(movie);
+    }
+
+    private MovieDto MapToDto(Movie m)
+    {
+        return new MovieDto
         {
             Id = m.Id,
             Title = m.Title,
@@ -54,6 +67,6 @@ public class MovieService : IMovieService
             Plot = m.Plot,
             Rank = m.Rank,
             RunningTimeSecs = m.RunningTimeSecs
-        });
+        };
     }
 }

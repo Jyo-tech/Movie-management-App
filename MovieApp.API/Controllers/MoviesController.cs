@@ -24,7 +24,6 @@ public class MoviesController : ControllerBase
         try
         {
             _logger.LogInformation("Fetching latest 4 movies.");
-            // Requirement: Home page should display latest 4 movies
             var movies = await _movieService.GetLatestMoviesAsync(4);
             _logger.LogInformation("Successfully fetched {Count} movies.", movies.Count());
             return Ok(movies);
@@ -53,4 +52,31 @@ public class MoviesController : ControllerBase
             return StatusCode(500, "Internal server error");
         }
     }
+
+    // POST: api/movies
+    [HttpPost]
+    public async Task<ActionResult<MovieDto>> CreateMovie([FromBody] MovieDto movieDto)
+    {
+        try
+        {
+            _logger.LogInformation("Creating new movie with title: {Title}.", movieDto.Title);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Invalid model state for movie creation.");
+                return BadRequest(ModelState);
+            }
+
+            var createdMovie = await _movieService.CreateMovieAsync(movieDto);
+            _logger.LogInformation("Successfully created movie with id: {MovieId}.", createdMovie.Id);
+            return  Ok(createdMovie);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while creating a new movie.");
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+
 }
