@@ -7,8 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MovieApp.Application\MovieApp.Application.csproj" />
     <ProjectReference Include="..\MovieApp.Domain\MovieApp.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\Seed\moviedata.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
