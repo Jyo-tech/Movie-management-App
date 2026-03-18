@@ -9,7 +9,7 @@ public interface IMovieRepository
     Task<IEnumerable<Movie>> GetLatestMoviesAsync(int count);
     
     // Updated search to match the new properties (e.g. string for genre since it's dynamic)
-    Task<IEnumerable<Movie>> SearchAsync(string? title, string? genre, int? year, string? actor, string? director);
+    Task<IEnumerable<Movie>> SearchAsync(string? title, string? genre, int? year);
     
     Task AddAsync(Movie movie);
     Task UpdateAsync(Movie movie);
