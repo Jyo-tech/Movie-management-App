@@ -69,7 +69,7 @@ public class MoviesController : ControllerBase
 
             var createdMovie = await _movieService.CreateMovieAsync(movieDto);
             _logger.LogInformation("Successfully created movie with id: {MovieId}.", createdMovie.Id);
-            return  Ok(createdMovie);
+            return CreatedAtAction(nameof(GetMovieById), new { id = createdMovie.Id }, createdMovie);
         }
         catch (Exception ex)
         {
@@ -78,5 +78,86 @@ public class MoviesController : ControllerBase
         }
     }
 
+    // GET: api/movies/{id}
+    [HttpGet("{id}")]
+    public async Task<ActionResult<MovieDto>> GetMovieById(int id)
+    {
+        try
+        {
+            _logger.LogInformation("Fetching movie with id: {MovieId}.", id);
+            var movie = await _movieService.GetMovieByIdAsync(id);
 
+            if (movie == null)
+            {
+                _logger.LogWarning("Movie with id: {MovieId} not found.", id);
+                return NotFound();
+            }
+
+            _logger.LogInformation("Successfully fetched movie with id: {MovieId}.", id);
+            return Ok(movie);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while fetching movie with id: {MovieId}.", id);
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+    // PUT: api/movies/{id}
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateMovie(int id, [FromBody] MovieDto movieDto)
+    {
+        try
+        {
+            _logger.LogInformation("Updating movie with id: {MovieId}.", id);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Invalid model state for movie update.");
+                return BadRequest(ModelState);
+            }
+
+            var existingMovie = await _movieService.GetMovieByIdAsync(id);
+            if (existingMovie == null)
+            {
+                _logger.LogWarning("Movie with id: {MovieId} not found for update.", id);
+                return NotFound();
+            }
+
+            await _movieService.UpdateMovieAsync(id, movieDto);
+            _logger.LogInformation("Successfully updated movie with id: {MovieId}.", id);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while updating movie with id: {MovieId}.", id);
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+    // DELETE: api/movies/{id}
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteMovie(int id)
+    {
+        try
+        {
+            _logger.LogInformation("Deleting movie with id: {MovieId}.", id);
+
+            var existingMovie = await _movieService.GetMovieByIdAsync(id);
+            if (existingMovie == null)
+            {
+                _logger.LogWarning("Movie with id: {MovieId} not found for deletion.", id);
+                return NotFound();
+            }
+
+            await _movieService.DeleteMovieAsync(id);
+            _logger.LogInformation("Successfully deleted movie with id: {MovieId}.", id);
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while deleting movie with id: {MovieId}.", id);
+            return StatusCode(500, "Internal server error");
+        }
+    }
 }

@@ -26,7 +26,6 @@ public class MovieRepository : IMovieRepository
 
     public async Task<IEnumerable<Movie>> GetLatestMoviesAsync(int count)
     {
-        // For the home page: display latest movies sorted by ReleaseDate descending
         return await _context.Movies
             .OrderByDescending(m => m.ReleaseDate)
             .Take(count)
@@ -39,7 +38,6 @@ public class MovieRepository : IMovieRepository
 
         if (!string.IsNullOrWhiteSpace(title))
         {
-            // Case-insensitive search using EF Core's translation to ILIKE (in PostgreSQL) or standard LIKE
             query = query.Where(m => m.Title.ToLower().Contains(title.ToLower()));
         }
 
@@ -67,7 +65,7 @@ public class MovieRepository : IMovieRepository
     public async Task UpdateAsync(Movie movie)
     {
         _context.Movies.Update(movie);
-        await Task.CompletedTask; // Update is synchronous in EF Core
+        await Task.CompletedTask; 
     }
 
     public async Task DeleteAsync(int id)
