@@ -1,0 +1,100 @@
+<div class="search-container">
+  <div class="header">
+    <h1>Search Movies</h1>
+    <p>Find your favorite movies by title, year, or genre.</p>
+  </div>
+
+  <div class="search-box shadow">
+    <form (ngSubmit)="onSearch()" #searchForm="ngForm">
+      
+      <div class="form-row">
+        <!-- Title Search -->
+        <div class="form-group">
+          <label for="title" style="margin-right: 10px;">Title</label>
+          <input 
+            type="text" 
+            id="title" 
+            name="title" 
+            [(ngModel)]="searchTitle" 
+            placeholder="e.g. Gettysburg">
+        </div>
+
+        <!-- Year Search -->
+        <div class="form-group">
+          <label for="year" style="margin-right: 10px;">Release Year</label>
+          <input 
+            type="number" 
+            id="year" 
+            name="year" 
+            [(ngModel)]="searchYear" 
+            placeholder="e.g. 1993"
+            min="1900" 
+            max="2100">
+        </div>
+      </div>
+
+      <!-- Genre Radio Buttons (To satisfy assessment requirement) -->
+      <div class="form-group">
+        <label>Genre</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="genre" [(ngModel)]="searchGenre" value=""> Any
+          </label>
+          <label *ngFor="let genre of availableGenres" class="radio-label">
+            <input type="radio" name="genre" [(ngModel)]="searchGenre" [value]="genre"> {{ genre }}
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="clearSearch()">Clear</button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          <span *ngIf="!loading">Search Movies</span>
+          <span *ngIf="loading">Searching...</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Searching our database...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- No Results State -->
+  <div *ngIf="hasSearched && !loading && !error && movies.length === 0" class="empty-container">
+    <p>No movies match your search criteria. Try using different filters.</p>
+  </div>
+
+  <!-- Results Grid -->
+  <div *ngIf="!loading && !error && movies.length > 0" class="results-section">
+    <h2>Search Results ({{ movies.length }})</h2>
+    
+    <div class="movie-grid">
+      <div *ngFor="let movie of movies" class="movie-card shadow">
+        <div class="movie-image">
+          <img [src]="movie.imageUrl || 'assets/placeholder-movie.png'" [alt]="movie.title">
+          <div class="movie-rating">{{ movie.rating | number:'1.1-1' }}</div>
+        </div>
+        <div class="movie-info">
+          <h3>{{ movie.title }}</h3>
+          <p class="movie-meta">
+            <span class="movie-year">{{ movie.year }}</span> • 
+            <span class="movie-genre">{{ movie.genres[0] }}</span>
+          </p>
+          <div class="movie-actions">
+            <button class="btn btn-primary" [routerLink]="['/movies', movie.id]">View Details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
