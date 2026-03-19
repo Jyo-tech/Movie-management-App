@@ -24,4 +24,19 @@ export class MovieService {
 
     return this.http.get<MovieDto[]>(`${environment.apiUrl}/search`, { params });
   }
+
+  getMovieById(id: number): Observable<MovieDto> {
+    return this.http.get<MovieDto>(`${environment.apiUrl}/${id}`);
+  }
+
+  deleteMovie(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/${id}`);
+  }
+  updateMovie( id: number, movie: MovieDto): Observable<MovieDto> {
+    return this.http.put<MovieDto>(`${environment.apiUrl}/${id}`, movie);
+  }
+
+  createMovie(movie: MovieDto): Observable<MovieDto> {
+    return this.http.post<MovieDto>(environment.apiUrl, movie);
+  }
 }

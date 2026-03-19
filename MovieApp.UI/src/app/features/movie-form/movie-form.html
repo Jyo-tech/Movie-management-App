@@ -1,0 +1,143 @@
+<div class="form-container">
+  <div class="header">
+    <h1>{{ isEditMode ? 'Edit Movie' : 'Add New Movie' }}</h1>
+    <p>Fill out the details below to {{ isEditMode ? 'update the' : 'create a' }} movie.</p>
+  </div>
+
+  <div *ngIf="loading && isEditMode" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading movie data...</p>
+  </div>
+
+  <form *ngIf="!loading || !isEditMode" (ngSubmit)="onSubmit()" #movieForm="ngForm" class="movie-form shadow">
+    
+    <div class="form-row">
+      <div class="form-group flex-2">
+        <label for="title">Title *</label>
+        <input 
+          type="text" 
+          id="title" 
+          name="title" 
+          [(ngModel)]="movie.title" 
+          required 
+          placeholder="Movie Title"
+          #title="ngModel">
+        <div *ngIf="title.invalid && (title.dirty || title.touched)" class="error-text">Title is required.</div>
+      </div>
+
+      <div class="form-group flex-1">
+        <label for="year">Release Year *</label>
+        <input 
+          type="number" 
+          id="year" 
+          name="year" 
+          [(ngModel)]="movie.year" 
+          required 
+          min="1900" 
+          max="2100">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group flex-1">
+        <label for="releaseDate">Release Date (yyyy-MM-dd) *</label>
+        <input 
+          type="date" 
+          id="releaseDate" 
+          name="releaseDate" 
+          [(ngModel)]="movie.releaseDate" 
+          required>
+      </div>
+
+      <div class="form-group flex-1">
+        <label for="runningTime">Running Time (seconds)</label>
+        <input 
+          type="number" 
+          id="runningTime" 
+          name="runningTime" 
+          [(ngModel)]="movie.runningTimeSecs" 
+          min="0">
+      </div>
+
+      <div class="form-group flex-1">
+        <label for="rating">Rating (0-10)</label>
+        <input 
+          type="number" 
+          id="rating" 
+          name="rating" 
+          [(ngModel)]="movie.rating" 
+          min="0" 
+          max="10" 
+          step="0.1">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group flex-1">
+        <label for="directors">Director(s) *</label>
+        <input 
+          type="text" 
+          id="directors" 
+          name="directors" 
+          [(ngModel)]="movie.directors" 
+          required 
+          placeholder="e.g. Christopher Nolan"
+          #directors="ngModel">
+        <div *ngIf="directors.invalid && (directors.dirty || directors.touched)" class="error-text">Director is required.</div>
+      </div>
+
+      <!-- Genre Dropdown to fulfill requirement -->
+      <div class="form-group flex-1">
+        <label for="primaryGenre">Primary Genre *</label>
+        <select 
+          id="primaryGenre" 
+          name="primaryGenre" 
+          [(ngModel)]="movie.genres[0]" 
+          required>
+          <option *ngFor="let genre of availableGenres" [value]="genre">{{ genre }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="actors">Actors (Comma separated) *</label>
+      <input 
+        type="text" 
+        id="actors" 
+        name="actors" 
+        [(ngModel)]="actorsInput" 
+        required 
+        placeholder="e.g. Tom Hanks, Matthew McConaughey"
+        #actors="ngModel">
+      <div *ngIf="actors.invalid && (actors.dirty || actors.touched)" class="error-text">At least one actor is required.</div>
+    </div>
+
+    <div class="form-group">
+      <label for="imageUrl">Poster Image URL</label>
+      <input 
+        type="url" 
+        id="imageUrl" 
+        name="imageUrl" 
+        [(ngModel)]="movie.imageUrl" 
+        placeholder="https://...">
+    </div>
+
+    <div class="form-group">
+      <label for="plot">Plot Summary</label>
+      <textarea 
+        id="plot" 
+        name="plot" 
+        [(ngModel)]="movie.plot" 
+        rows="4" 
+        placeholder="Enter movie description..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" routerLink="/">Cancel</button>
+      <button type="submit" class="btn btn-primary" [disabled]="movieForm.invalid || loading">
+        {{ isEditMode ? 'Update Movie' : 'Save Movie' }}
+      </button>
+    </div>
+
+  </form>
+</div>

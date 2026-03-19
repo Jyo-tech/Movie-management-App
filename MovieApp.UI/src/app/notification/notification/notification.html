@@ -1,0 +1,9 @@
+<div *ngIf="notification" class="toast-overlay">
+  <div class="toast-container" [ngClass]="notification.type">
+    <div class="toast-content">
+      <span class="icon" *ngIf="notification.type === 'success'">✅</span>
+      <span class="icon" *ngIf="notification.type === 'error'">❌</span>
+      <span class="message">{{ notification.message }}</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<div class="details-container">
+  <div *ngIf="loading" class="state-container">
+    <div class="spinner"></div>
+    <p>Loading movie details...</p>
+  </div>
+
+  <div *ngIf="error" class="state-container error">
+    <p>{{ error }}</p>
+    <button class="btn btn-secondary" routerLink="/">Back to Home</button>
+  </div>
+
+  <div *ngIf="!loading && !error && movie" class="movie-content">
+    <div class="movie-header">
+      <div class="movie-poster">
+        <img [src]="movie.imageUrl || 'assets/placeholder-movie.png'" [alt]="movie.title">
+      </div>
+      <div class="movie-main-info">
+        <h1>{{ movie.title }} ({{ movie.year }})</h1>
+        <p class="rating">⭐ {{ movie.rating | number:'1.1-1' }} / 10</p>
+        <div class="actions">
+          <button class="btn btn-primary" [routerLink]="['/movies/edit', movie.id]">Edit Movie</button>
+          <button class="btn btn-danger" (click)="onDelete()">Delete Movie</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="movie-details-grid">
+      <div class="detail-item">
+        <label>Release Date</label>
+        <p>{{ movie.releaseDate | date:'longDate' }}</p>
+      </div>
+      <div class="detail-item">
+        <label>Running Time</label>
+        <p>{{ movie.runningTimeSecs / 60 | number:'1.0-0' }} minutes</p>
+      </div>
+      <div class="detail-item full-width">
+        <label>Genres</label>
+        <p>{{ movie.genres.join(', ') }}</p>
+      </div>
+      <div class="detail-item full-width">
+        <label>Directors</label>
+        <p>{{ movie.directors }}</p>
+      </div>
+      <div class="detail-item full-width">
+        <label>Actors</label>
+        <p>{{ movie.actors.join(', ') }}</p>
+      </div>
+      <div class="detail-item full-width">
+        <label>Plot Summary</label>
+        <p class="plot">{{ movie.plot }}</p>
+      </div>
+    </div>
+
+    <div class="footer-actions">
+      <button class="btn btn-secondary" routerLink="/">Back to Home</button>
+    </div>
+  </div>
+</div>
