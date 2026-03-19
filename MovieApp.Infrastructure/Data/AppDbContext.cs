@@ -39,14 +39,13 @@ public class AppDbContext : DbContext
                 );
         });
 
-        // Seed initial data
+      
         SeedData(modelBuilder);
     }
 
     private void SeedData(ModelBuilder modelBuilder)
     {
         // Define the path to the seed data file.
-        // Assuming moviedata.json will be copied to the output directory or lives in the root.
         var seedFilePath = Path.Combine(AppContext.BaseDirectory, "Data", "Seed", "moviedata.json");
         
         if (File.Exists(seedFilePath))
@@ -56,7 +55,6 @@ public class AppDbContext : DbContext
                 var jsonData = File.ReadAllText(seedFilePath);
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 
-                // We use a temporary class to match the exact JSON property names
                 var jsonMovies = JsonSerializer.Deserialize<List<MovieSeedDto>>(jsonData, options);
                 
                 if (jsonMovies != null && jsonMovies.Any())
@@ -64,7 +62,7 @@ public class AppDbContext : DbContext
                     var idCounter = 1;
                     var moviesToSeed = jsonMovies.Select(m => new Movie
                     {
-                        Id = idCounter++, // Assign explicit IDs for seeding
+                        Id = idCounter++, 
                         Title = m.Title ?? string.Empty,
                         Year = m.Year,
                         Directors = m.Directors ?? string.Empty,
@@ -83,14 +81,12 @@ public class AppDbContext : DbContext
             }
             catch (Exception ex)
             {
-                // In a real application, you'd log this exception
                 Console.WriteLine($"Error seeding data: {ex.Message}");
             }
         }
     }
 }
 
-// Internal class specifically for mapping the JSON payload which uses spaces in property names
 internal class MovieSeedDto
 {
     public string? Title { get; set; }

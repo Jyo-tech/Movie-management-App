@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule ,RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -16,8 +16,7 @@ export class Home implements OnInit {
   error: string | null = null;
 
   constructor(
-    protected readonly movieService: MovieService,
-    private cdr: ChangeDetectorRef
+    protected readonly movieService: MovieService
   ) {}
 
   ngOnInit(): void {
@@ -36,7 +35,6 @@ export class Home implements OnInit {
         console.log('Failed to load latest movies. Please try again later.');
         this.error = 'Failed to load latest movies. Please try again later.';
         this.loading = false;
-        this.cdr.detectChanges();  // Force change detection
       }
     });
   }

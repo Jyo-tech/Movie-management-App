@@ -4,7 +4,7 @@ import { RouteConfigLoadEnd, RouterLink, RouterLinkActive, RouterOutlet } from '
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet , RouterLinkActive ,RouterLink ,CommonModule],
+  imports: [RouterOutlet , RouterLinkActive ,RouterLink ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

@@ -19,8 +19,20 @@ builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 
 builder.Services.AddScoped<IMovieService, MovieService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularUI",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200", "https://localhost:4200", "http://localhost:61919")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //builder.Services.AddOpenApi();
+
 
 var app = builder.Build();
 
@@ -36,5 +48,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("AllowAngularUI");
 
 app.Run();

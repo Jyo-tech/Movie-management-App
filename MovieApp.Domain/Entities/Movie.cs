@@ -9,8 +9,6 @@ public class Movie
     public DateTime ReleaseDate { get; set; } 
     public double Rating { get; set; }
     
-    // We store these as lists in the domain for easier manipulation.
-    // Entity Framework will be configured to handle the conversion to/from comma-separated strings in the database.
     public List<string> Genres { get; set; } = new(); 
     public List<string> Actors { get; set; } = new();
 

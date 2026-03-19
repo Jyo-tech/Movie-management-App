@@ -4,11 +4,11 @@
   "cli": {
     "packageManager": "npm"
   },
+  "defaultProject": "MovieApp.UI",
   "newProjectRoot": "projects",
   "projects": {
     "MovieApp.UI": {
       "projectType": "application",
-      "schematics": {},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -27,7 +27,6 @@
             "styles": [
               "src/styles.css"
             ]
-          
           },
           "configurations": {
             "production": {
@@ -66,7 +65,22 @@
           "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": []
+          }
         }
       }
     }
