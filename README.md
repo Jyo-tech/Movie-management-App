@@ -55,6 +55,9 @@ Open `http://localhost:4200`.
 
 Optional migration `RemoveLegacyEmbeddedSeedRow` removes the old single-row migration seed if you upgraded from an earlier snapshot that inserted Gettysburg.
 
+## Cors Issue 
+check for appsetting.json to add allwed origins whichever port your localhots is running
+
 ## Tests
 
 **Backend** (from repo root):
@@ -83,10 +86,16 @@ ng test
 
 - **Running time** is stored as **seconds** (`RunningTimeSecs`), not a `HH:mm:ss` string; the API contract and UI use that shape consistently.
 - **Search** uses **exact** (case-insensitive) title and genre token match, with optional year filter—good for precise lookups and indexing; partial “contains” search is intentionally not used.
-- **Latest movies** on the home page are ordered by **release date** (newest first), which aligns with “latest” behaviour for typical datasets.
+- **Latest movies** on the home page are ordered by **release year** (newest first), which aligns with “latest” behaviour for typical datasets.
 - **CORS** is configured for local Angular origins; tighten or use environment-based policies for deployment.
 - **Database seeding** is done at API startup from JSON (not `HasData` migrations) so large datasets stay out of migration history.
 
 ## Key assignment alignment
 
 - CRUD, validation on API (`MovieDto` data annotations) and Angular forms, search with dedicated results area, details with edit/delete (delete confirmation), toast notifications for feedback, and unit tests on API/application/infrastructure/domain and selected UI specs.
+For better retrieval index have been added 
+
+## Improvement 
+- Add autherization/Authentication
+- Add caching if continues search on for same movie 
+
