@@ -5,37 +5,42 @@
   </div>
 
   <div class="search-box shadow">
+    <div class="search-panel-head">
+      <h2 class="search-panel-title">Search filters</h2>
+      <p class="search-panel-sub">Use one or more fields—leave the rest open for broader results.</p>
+    </div>
+
     <form (ngSubmit)="onSearch()" #searchForm="ngForm">
-      
       <div class="form-row">
-        <!-- Title Search -->
-        <div class="form-group">
-          <label for="title" style="margin-right: 10px;">Title</label>
-          <input 
-            type="text" 
-            id="title" 
-            name="title" 
-            [(ngModel)]="searchTitle" 
-            placeholder="e.g. Gettysburg">
+        <div class="form-field">
+          <label class="field-label" for="title">Title</label>
+          <input
+            class="field-input"
+            type="text"
+            id="title"
+            name="title"
+            [(ngModel)]="searchTitle"
+            placeholder="e.g. Gettysburg"
+            autocomplete="off">
         </div>
 
-        <!-- Year Search -->
-        <div class="form-group">
-          <label for="year" style="margin-right: 10px;">Release Year</label>
-          <input 
-            type="number" 
-            id="year" 
-            name="year" 
-            [(ngModel)]="searchYear" 
+        <div class="form-field">
+          <label class="field-label" for="year">Release year</label>
+          <input
+            class="field-input"
+            type="number"
+            id="year"
+            name="year"
+            [(ngModel)]="searchYear"
             placeholder="e.g. 1993"
-            min="1900" 
+            min="1900"
             max="2100">
         </div>
       </div>
 
-      <!-- Genre Radio Buttons (To satisfy assessment requirement) -->
-      <div class="form-group">
-        <label>Genre</label>
+      <div class="form-section">
+        <label class="field-label">Genre</label>
+        <p class="field-hint">Pick a genre or leave &ldquo;Any&rdquo; for all genres.</p>
         <div class="radio-group">
           <label class="radio-label">
             <input type="radio" name="genre" [(ngModel)]="searchGenre" value=""> Any
@@ -49,34 +54,29 @@
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" (click)="clearSearch()">Clear</button>
         <button type="submit" class="btn btn-primary" [disabled]="loading">
-          <span *ngIf="!loading">Search Movies</span>
-          <span *ngIf="loading">Searching...</span>
+          <span *ngIf="!loading">Search movies</span>
+          <span *ngIf="loading">Searching…</span>
         </button>
       </div>
-
     </form>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading-container">
+  <div *ngIf="loading" class="loading-container status-card">
     <div class="spinner"></div>
-    <p>Searching our database...</p>
+    <p>Searching our database…</p>
   </div>
 
-  <!-- Error State -->
-  <div *ngIf="error" class="error-container">
+  <div *ngIf="error" class="error-container status-card">
     <p>{{ error }}</p>
   </div>
 
-  <!-- No Results State -->
-  <div *ngIf="hasSearched && !loading && !error && movies.length === 0" class="empty-container">
+  <div *ngIf="hasSearched && !loading && !error && movies.length === 0" class="empty-container status-card">
     <p>No movies match your search criteria. Try using different filters.</p>
   </div>
 
-  <!-- Results Grid -->
   <div *ngIf="!loading && !error && movies.length > 0" class="results-section">
-    <h2>Search Results ({{ movies.length }})</h2>
-    
+    <h2>Search results ({{ movies.length }})</h2>
+
     <div class="movie-grid">
       <div *ngFor="let movie of movies" class="movie-card shadow">
         <div class="movie-image">
@@ -86,11 +86,11 @@
         <div class="movie-info">
           <h3>{{ movie.title }}</h3>
           <p class="movie-meta">
-            <span class="movie-year">{{ movie.year }}</span> • 
+            <span class="movie-year">{{ movie.year }}</span> •
             <span class="movie-genre">{{ movie.genres[0] }}</span>
           </p>
           <div class="movie-actions">
-            <button class="btn btn-primary" [routerLink]="['/movies', movie.id]">View Details</button>
+            <button type="button" class="btn btn-primary" [routerLink]="['/movies', movie.id]">View details</button>
           </div>
         </div>
       </div>

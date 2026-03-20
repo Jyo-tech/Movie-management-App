@@ -29,16 +29,15 @@ describe('MovieForm', () => {
     router = { navigate: jest.fn() };
     activatedRoute = { snapshot: { paramMap: { get: jest.fn().mockReturnValue(null) } } };
 
-    await TestBed.configureTestingModule({
-      imports: [CommonModule],
-      declarations: [MovieForm],
-      providers: [
-        { provide: MovieService, useValue: movieService },
-        { provide: Notification, useValue: notificationService },
-        { provide: Router, useValue: router },
-        { provide: ActivatedRoute, useValue: activatedRoute }
-      ]
-    }).compileComponents();
+   await TestBed.configureTestingModule({
+  imports: [CommonModule, MovieForm], // ✅ MovieForm is standalone
+  providers: [
+    { provide: MovieService, useValue: movieService },
+    { provide: Notification, useValue: notificationService },
+    { provide: Router, useValue: router },
+    { provide: ActivatedRoute, useValue: activatedRoute }
+  ]
+}).compileComponents();
 
     fixture = TestBed.createComponent(MovieForm);
     component = fixture.componentInstance;
