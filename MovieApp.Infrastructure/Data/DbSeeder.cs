@@ -105,7 +105,11 @@ public static class DbSeeder
         Directors = m.Directors ?? string.Empty,
         ReleaseDate = NormalizeReleaseDate(m.ReleaseDate),
         Rating = m.Rating,
-        Genres = SplitCommaSeparated(m.Genres),
+        Genres = m.Genres?
+            .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .Where(g => !string.IsNullOrWhiteSpace(g))
+            .Distinct()
+            .ToArray() ?? Array.Empty<string>(),
         ImageUrl = m.ImageUrl ?? string.Empty,
         Plot = m.Plot ?? string.Empty,
         Rank = m.Rank,

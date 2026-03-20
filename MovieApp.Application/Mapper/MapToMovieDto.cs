@@ -14,7 +14,7 @@ namespace MovieApp.Application.Mapper
             Directors = m.Directors,
             ReleaseDate = m.ReleaseDate,
             Rating = m.Rating,
-            Genres = m.Genres,
+            Genres = m.Genres.ToList(),
             Actors = m.Actors,
             ImageUrl = m.ImageUrl,
             Plot = m.Plot,

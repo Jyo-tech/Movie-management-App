@@ -62,7 +62,11 @@ public class MovieService : IMovieService
             Directors = movieDto.Directors,
             ReleaseDate = ToPersistableUtc(movieDto.ReleaseDate),
             Rating = movieDto.Rating,
-            Genres = movieDto.Genres,
+           Genres = movieDto.Genres
+            .Select(g => g.Trim())
+            .Where(g => !string.IsNullOrWhiteSpace(g))
+            .Distinct()
+            .ToArray(),
             Actors = movieDto.Actors,
             ImageUrl = movieDto.ImageUrl,
             Plot = movieDto.Plot,
@@ -97,7 +101,11 @@ public class MovieService : IMovieService
         movie.Directors = movieDto.Directors;
         movie.ReleaseDate = ToPersistableUtc(movieDto.ReleaseDate);
         movie.Rating = movieDto.Rating;
-        movie.Genres = movieDto.Genres;
+        movie.Genres = movieDto.Genres
+            .Select(g => g.Trim())
+            .Where(g => !string.IsNullOrWhiteSpace(g))
+            .Distinct()
+            .ToArray();
         movie.Actors = movieDto.Actors;
         movie.ImageUrl = movieDto.ImageUrl;
         movie.Plot = movieDto.Plot;

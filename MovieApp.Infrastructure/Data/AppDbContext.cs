@@ -26,12 +26,10 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Directors).IsRequired();
             
             // Convert List<string> to comma-separated strings for database storage
-            entity.Property(e => e.Genres)
-                .HasConversion(
-                    v => string.Join(", ", v),
-                    v => v.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList()
-                );
-
+           modelBuilder.Entity<Movie>()
+        .Property(m => m.Genres)
+        .HasColumnType("text[]");
+        
             entity.Property(e => e.Actors)
                 .HasConversion(
                     v => string.Join(", ", v),

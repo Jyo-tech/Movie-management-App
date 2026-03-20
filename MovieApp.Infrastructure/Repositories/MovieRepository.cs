@@ -51,7 +51,7 @@ public class MovieRepository : IMovieRepository
         if (!string.IsNullOrWhiteSpace(genre))
         {
             var g = genre.ToLower();
-          query = query.Where(m => m.Genres.Any(x => x == g));       
+          query = query.Where(m => m.Genres.Any(x => x.ToLower() == g.ToLower()));       
            }
 
         query = query.OrderByDescending(m => m.Year).ThenBy(m => m.Id);

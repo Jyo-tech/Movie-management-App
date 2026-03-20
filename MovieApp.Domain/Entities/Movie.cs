@@ -9,7 +9,8 @@ public class Movie
     public DateTime ReleaseDate { get; set; } 
     public double Rating { get; set; }
     
-    public List<string> Genres { get; set; } = new(); 
+     public string[] Genres { get; set; } = Array.Empty<string>();
+
     public List<string> Actors { get; set; } = new();
 
     public string ImageUrl { get; set; } = string.Empty;
