@@ -1,86 +1,80 @@
-import { Component, NgZone } from '@angular/core';
-import { MovieDto } from '../../models/movie.model';
-import { MovieService } from '../../core/movie-service';
-import { CommonModule  } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap, Router, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-search',
-  imports: [CommonModule ,FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './search.html',
   styleUrl: './search.css',
 })
-export class Search {
-  searchTitle: string = '';
+export class Search implements OnInit, OnDestroy {
+  searchTitle = '';
   searchYear: number | null = null;
-  searchGenre: string = '';
+  searchGenre = '';
 
-  movies: MovieDto[] = [];
-  totalCount = 0;
-  page = 1;
-  readonly pageSize = 24;
-  loading: boolean = false;
-  error: string | null = null;
-  hasSearched: boolean = false;
+  availableGenres: string[] = [
+    'Action',
+    'Comedy',
+    'Drama',
+    'Horror',
+    'Sci-Fi',
+    'Thriller',
+    'Romance',
+  ];
 
-  availableGenres: string[] = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance'];
+  private querySub?: Subscription;
 
-  get totalPages(): number {
-    return Math.max(1, Math.ceil(this.totalCount / this.pageSize));
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.applyQueryParams(this.route.snapshot.queryParamMap);
+    this.querySub = this.route.queryParamMap.subscribe((q) =>
+      this.applyQueryParams(q)
+    );
   }
 
-  constructor(private movieService: MovieService , private zone: NgZone) {}
-
-  onSearch() {
-    this.page = 1;
-    this.runSearch();
+  ngOnDestroy(): void {
+    this.querySub?.unsubscribe();
   }
 
-  goToPage(p: number) {
-    const next = Math.max(1, Math.min(p, this.totalPages));
-    if (next === this.page) return;
-    this.page = next;
-    this.runSearch();
+  private applyQueryParams(q: ParamMap): void {
+    const title = q.get('title');
+    this.searchTitle = title !== null ? title : '';
+
+    const genre = q.get('genre');
+    this.searchGenre = genre !== null ? genre : '';
+
+    const y = q.get('year');
+    if (y != null && y !== '') {
+      const n = Number(y);
+      this.searchYear = Number.isNaN(n) ? null : n;
+    } else {
+      this.searchYear = null;
+    }
   }
 
-  private runSearch() {
-    this.loading = true;
-    this.error = null;
-    this.hasSearched = true;
+  onSearch(): void {
+    const title = this.searchTitle.trim();
+    const queryParams: Record<string, string | number> = { page: 1 };
+    if (title) queryParams['title'] = title;
+    if (this.searchYear != null && !Number.isNaN(this.searchYear)) {
+      queryParams['year'] = this.searchYear;
+    }
+    if (this.searchGenre) queryParams['genre'] = this.searchGenre;
 
-    const titleParam = this.searchTitle.trim() || undefined;
-    const genreParam = this.searchGenre || undefined;
-    const yearParam = this.searchYear || undefined;
-
-    this.movieService.searchMovies(titleParam, genreParam, yearParam, this.page, this.pageSize).subscribe({
-      next: (result) => {
-        this.zone.run(() => {
-        this.movies = result.items;
-        this.totalCount = result.totalCount;
-        this.page = result.page;
-        this.loading = false;
-      });
-      },
-      error: (err) => {
-        this.zone.run(() => {
-          this.error = 'Failed to search movies. Please try again later.';
-          this.loading = false;
-        });
-      }
-    });
-
+    void this.router.navigate(['/search/results'], { queryParams });
   }
 
-  clearSearch() {
+  clearSearch(): void {
     this.searchTitle = '';
     this.searchYear = null;
     this.searchGenre = '';
-    this.movies = [];
-    this.totalCount = 0;
-    this.page = 1;
-    this.error = null;
-    this.hasSearched = false;
+    void this.router.navigate(['/search'], { queryParams: {} });
   }
-
 }

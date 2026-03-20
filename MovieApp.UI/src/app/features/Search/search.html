@@ -55,55 +55,9 @@
 
       <div class="form-actions">
         <button type="button" class="btn btn-secondary" (click)="clearSearch()">Clear</button>
-        <button type="submit" class="btn btn-primary" [disabled]="loading">
-          <span *ngIf="!loading">Search movies</span>
-          <span *ngIf="loading">Searching…</span>
-        </button>
+        <button type="submit" class="btn btn-primary">Search movies</button>
       </div>
     </form>
-  </div>
-
-  <div *ngIf="loading" class="loading-container status-card">
-    <div class="spinner"></div>
-    <p>Searching our database…</p>
-  </div>
-
-  <div *ngIf="error" class="error-container status-card">
-    <p>{{ error }}</p>
-  </div>
-
-  <div *ngIf="hasSearched && !loading && !error && movies.length === 0" class="empty-container status-card">
-    <p>No movies match your search criteria. Try using different filters.</p>
-  </div>
-
-  <div *ngIf="!loading && !error && movies.length > 0" class="results-section">
-    <div class="results-heading">
-      <h2>Search results</h2>
-      <p class="results-count">Showing {{ movies.length }} of {{ totalCount }} — page {{ page }} of {{ totalPages }}</p>
-      <div *ngIf="totalPages > 1" class="pagination">
-        <button type="button" class="btn btn-secondary" (click)="goToPage(page - 1)" [disabled]="page <= 1">Previous</button>
-        <button type="button" class="btn btn-secondary" (click)="goToPage(page + 1)" [disabled]="page >= totalPages">Next</button>
-      </div>
-    </div>
-
-    <div class="movie-grid">
-      <div *ngFor="let movie of movies" class="movie-card shadow">
-        <div class="movie-image">
-          <img [src]="movie.imageUrl || 'assets/placeholder-movie.png'" [alt]="movie.title">
-          <div class="movie-rating">{{ movie.rating | number:'1.1-1' }}</div>
-        </div>
-        <div class="movie-info">
-          <h3>{{ movie.title }}</h3>
-          <p class="movie-meta">
-            <span class="movie-year">{{ movie.year }}</span> •
-            <span class="movie-genre">{{ movie.genres[0] }}</span>
-          </p>
-          <div class="movie-actions">
-            <button type="button" class="btn btn-primary" [routerLink]="['/movies', movie.id]">View details</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
 </div>

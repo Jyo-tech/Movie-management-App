@@ -29,15 +29,13 @@ public class MovieRepository : IMovieRepository
     public async Task<IEnumerable<Movie>> GetLatestMoviesAsync(int count)
     {
         return await _context.Movies
-            .OrderByDescending(m => m.ReleaseDate)
+            .OrderByDescending(m => m.Year)
             .Take(count)
             .ToListAsync();
     }
 
     public async Task<MovieSearchPage> SearchAsync(string? title, string? genre, int? year, int page, int pageSize)
     {
-        // page = Math.Max(1, page);
-        // pageSize = Math.Clamp(pageSize, 1, MaxSearchPageSize);
 
         var query = _context.Movies.AsNoTracking();
 
@@ -52,11 +50,11 @@ public class MovieRepository : IMovieRepository
 
         if (!string.IsNullOrWhiteSpace(genre))
         {
-            var g = genre.Trim();
-            query = query.Where(m => m.Genres.Any(x => x.ToLower() == g.ToLower()));
-        }
+            var g = genre.ToLower();
+          query = query.Where(m => m.Genres.Any(x => x == g));       
+           }
 
-        query = query.OrderByDescending(m => m.ReleaseDate).ThenBy(m => m.Id);
+        query = query.OrderByDescending(m => m.Year).ThenBy(m => m.Id);
 
         var totalCount = await query.CountAsync();
         var items = await query

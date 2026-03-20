@@ -1,0 +1,70 @@
+<div class="results-page">
+  <div class="results-top">
+    <div class="results-top-text">
+      <h1>Search results</h1>
+      <p class="filter-summary" *ngIf="hasLoaded && !error">
+        <ng-container *ngIf="filterTitle || filterGenre || filterYear !== null; else allFilters">
+          <span *ngIf="filterTitle"><strong>Title:</strong> {{ filterTitle }}</span>
+          <span *ngIf="filterGenre" class="sep">· <strong>Genre:</strong> {{ filterGenre }}</span>
+          <span *ngIf="filterYear !== null" class="sep">· <strong>Year:</strong> {{ filterYear }}</span>
+        </ng-container>
+        <ng-template #allFilters>Showing all movies (no filters).</ng-template>
+      </p>
+    </div>
+    <a
+      class="btn btn-secondary btn-modify"
+      routerLink="/search"
+      [queryParams]="{
+        title: filterTitle || null,
+        genre: filterGenre || null,
+        year: filterYear !== null ? filterYear : null
+      }">
+      Modify search
+    </a>
+  </div>
+
+  <div *ngIf="loading" class="loading-container status-card">
+    <div class="spinner"></div>
+    <p>Searching our database…</p>
+  </div>
+
+  <div *ngIf="error" class="error-container status-card">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="hasLoaded && !loading && !error && movies.length === 0" class="empty-container status-card">
+    <p>No movies match your search criteria.</p>
+    <a routerLink="/search" class="btn btn-primary inline-link">Back to search</a>
+  </div>
+
+  <div *ngIf="!loading && !error && movies.length > 0" class="results-section">
+    <div class="results-heading">
+      <p class="results-count">
+        Showing {{ movies.length }} of {{ totalCount }} — page {{ page }} of {{ totalPages }}
+      </p>
+      <div *ngIf="totalPages > 1" class="pagination">
+        <button type="button" class="btn btn-secondary" (click)="goToPage(page - 1)" [disabled]="page <= 1">Previous</button>
+        <button type="button" class="btn btn-secondary" (click)="goToPage(page + 1)" [disabled]="page >= totalPages">Next</button>
+      </div>
+    </div>
+
+    <div class="movie-grid">
+      <div *ngFor="let movie of movies" class="movie-card shadow">
+        <div class="movie-image">
+          <img [src]="movie.imageUrl || 'assets/placeholder-movie.png'" [alt]="movie.title">
+          <div class="movie-rating">{{ movie.rating | number:'1.1-1' }}</div>
+        </div>
+        <div class="movie-info">
+          <h3>{{ movie.title }}</h3>
+          <p class="movie-meta">
+            <span class="movie-year">{{ movie.year }}</span> •
+            <span class="movie-genre">{{ movie.genres[0] }}</span>
+          </p>
+          <div class="movie-actions">
+            <a class="btn btn-primary" [routerLink]="['/movies', movie.id]">View details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

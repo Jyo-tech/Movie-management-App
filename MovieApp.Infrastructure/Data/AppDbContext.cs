@@ -41,49 +41,6 @@ public class AppDbContext : DbContext
 
       
     }
-
-    // private void SeedData(ModelBuilder modelBuilder)
-    // {
-    //     // Define the path to the seed data file.
-    //     var seedFilePath = Path.Combine(AppContext.BaseDirectory, "Data", "Seed", "moviedata.json");
-        
-    //     if (File.Exists(seedFilePath))
-    //     {
-    //         try
-    //         {
-    //             var jsonData = File.ReadAllText(seedFilePath);
-    //             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                
-    //             var jsonMovies = JsonSerializer.Deserialize<List<MovieSeedDto>>(jsonData, options);
-                
-    //             if (jsonMovies != null && jsonMovies.Any())
-    //             {
-    //                 var idCounter = 1;
-    //                 var moviesToSeed = jsonMovies.Select(m => new Movie
-    //                 {
-    //                     Id = idCounter++, 
-    //                     Title = m.Title ?? string.Empty,
-    //                     Year = m.Year,
-    //                     Directors = m.Directors ?? string.Empty,
-    //                     ReleaseDate = m.ReleaseDate,
-    //                     Rating = m.Rating,
-    //                     Genres = string.IsNullOrWhiteSpace(m.Genres) ? new List<string>() : m.Genres.Split(", ", StringSplitOptions.TrimEntries).ToList(),
-    //                     ImageUrl = m.ImageUrl ?? string.Empty,
-    //                     Plot = m.Plot ?? string.Empty,
-    //                     Rank = m.Rank,
-    //                     RunningTimeSecs = m.RunningTimeSecs,
-    //                     Actors = string.IsNullOrWhiteSpace(m.Actors) ? new List<string>() : m.Actors.Split(", ", StringSplitOptions.TrimEntries).ToList()
-    //                 }).ToArray();
-
-    //                 modelBuilder.Entity<Movie>().HasData(moviesToSeed);
-    //             }
-    //         }
-    //         catch (Exception ex)
-    //         {
-    //             Console.WriteLine($"Error seeding data: {ex.Message}");
-    //         }
-    //     }
-    // }
 }
 
 internal class MovieSeedDto

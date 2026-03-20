@@ -100,7 +100,7 @@ public static class DbSeeder
 
     private static Movie ToMovie(MovieSeedDto m) => new()
     {
-        Title = m.Title ?? string.Empty,
+        Title = m.Title?.ToString() ?? string.Empty,
         Year = m.Year,
         Directors = m.Directors ?? string.Empty,
         ReleaseDate = NormalizeReleaseDate(m.ReleaseDate),

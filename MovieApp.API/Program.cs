@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MovieApp.API.ExceptionHandling;
 using MovieApp.Application.Interfaces;
 using MovieApp.Application.Services;
 using MovieApp.Domain.Interfaces;
@@ -9,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddSwaggerGen();
 
@@ -24,7 +27,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngularUI",
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200", "https://localhost:4200", "http://localhost:61919")
+            policy.WithOrigins(builder.Configuration["AllowAngularUI:Origins"]?.Split(",") ?? new string[0])
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -43,13 +46,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler();
+
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAngularUI");
 
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseCors("AllowAngularUI");
 
 var seedEnabled = app.Configuration.GetValue<bool?>("Seed:Enabled") ?? app.Environment.IsDevelopment();
 var forceFullReseed = app.Configuration.GetValue("Seed:ForceFullReseed", false) && app.Environment.IsDevelopment();
