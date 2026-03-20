@@ -11,7 +11,7 @@
     </div>
 
     <form (ngSubmit)="onSearch()" #searchForm="ngForm">
-      <div class="form-row">
+      <div class="form-row form-row--title-year">
         <div class="form-field">
           <label class="field-label" for="title">Title</label>
           <input
@@ -21,11 +21,11 @@
             name="title"
             [(ngModel)]="searchTitle"
             placeholder="Full title as stored (exact match)"
-            autocomplete="off">
-          <p class="field-hint">Match is exact (case-insensitive), not partial.</p>
+            autocomplete="off"
+            aria-describedby="title-search-hint">
         </div>
 
-        <div class="form-field">
+        <div class="form-field form-field--year">
           <label class="field-label" for="year">Release year</label>
           <input
             class="field-input"
@@ -38,6 +38,7 @@
             max="2100">
         </div>
       </div>
+      <p id="title-search-hint" class="field-hint field-hint-below-row">Title match is exact (case-insensitive), not partial.</p>
 
       <div class="form-section">
         <label class="field-label">Genre</label>

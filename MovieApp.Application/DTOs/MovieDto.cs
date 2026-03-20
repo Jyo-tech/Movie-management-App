@@ -25,6 +25,7 @@ public class MovieDto
     [MinLength(1, ErrorMessage = "At least one genre is required.")]
     public List<string> Genres { get; set; } = new();
 
+    [MinLength(1, ErrorMessage = "At least one actor is required.")]
     public List<string> Actors { get; set; } = new();
 
     [Url(ErrorMessage = "Image URL must be a valid URL.")]

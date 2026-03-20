@@ -4,6 +4,7 @@ import { of, throwError } from 'rxjs';
 import { MovieDetails } from './movie-details';
 import { MovieService } from '../../core/movie-service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Notification } from '../../core/notification';
 
 describe('MovieDetails', () => {
   let component: MovieDetails;
@@ -11,6 +12,7 @@ describe('MovieDetails', () => {
   let movieService: any;
   let activatedRoute: any;
   let router: any;
+  let notification: any;
 
   beforeEach(async () => {
     const movieServiceMock = {
@@ -21,13 +23,18 @@ describe('MovieDetails', () => {
       snapshot: { paramMap: { get: jest.fn() } }
     };
     const routerMock = { navigate: jest.fn() };
+    const notificationMock = {
+      showSuccess: jest.fn(),
+      showError: jest.fn()
+    };
 
     await TestBed.configureTestingModule({
       imports: [MovieDetails],
       providers: [
         { provide: MovieService, useValue: movieServiceMock },
         { provide: ActivatedRoute, useValue: activatedRouteMock },
-        { provide: Router, useValue: routerMock }
+        { provide: Router, useValue: routerMock },
+        { provide: Notification, useValue: notificationMock }
       ]
     })
     .compileComponents();
@@ -35,6 +42,7 @@ describe('MovieDetails', () => {
     movieService = TestBed.inject(MovieService);
     activatedRoute = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
+    notification = TestBed.inject(Notification);
 
     fixture = TestBed.createComponent(MovieDetails);
     component = fixture.componentInstance;
@@ -86,6 +94,7 @@ describe('MovieDetails', () => {
     component.onDelete();
 
     expect(movieService.deleteMovie).toHaveBeenCalledWith(1);
+    expect(notification.showSuccess).toHaveBeenCalledWith('Movie deleted successfully.');
     expect(router.navigate).toHaveBeenCalledWith(['/']);
   });
 });

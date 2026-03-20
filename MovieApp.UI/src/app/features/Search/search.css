@@ -56,7 +56,16 @@
     display: flex;
     gap: 1.25rem;
     margin-bottom: 1.5rem;
-    align-items: flex-end;
+    align-items: flex-start;
+}
+
+.form-field--year {
+    flex: 0 0 11rem;
+    max-width: 11rem;
+}
+
+.field-hint-below-row {
+    margin: 0 0 1.25rem;
 }
 
 .form-field {
@@ -328,6 +337,11 @@
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
+    }
+
+    .form-field--year {
+        flex: 1 1 auto;
+        max-width: none;
     }
 
     .form-actions {

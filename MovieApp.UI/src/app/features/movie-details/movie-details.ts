@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MovieService } from '../../core/movie-service';
-import { ActivatedRoute, Route, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MovieDto } from '../../models/movie.model';
 import { CommonModule } from '@angular/common';
+import { Notification } from '../../core/notification';
 
 @Component({
   selector: 'app-movie-details',
@@ -15,9 +16,12 @@ export class MovieDetails implements OnInit {
   loading: boolean = true
   error: string | null = null;
 
-  constructor(private movieService: MovieService ,
-    private route : ActivatedRoute, 
-    private router: Router) {}
+  constructor(
+    private movieService: MovieService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private notification: Notification
+  ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -51,12 +55,12 @@ onDelete(): void {
     if (confirm(`Are you sure you want to delete "${this.movie.title}"?`)) {
       this.movieService.deleteMovie(this.movie.id).subscribe({
         next: () => {
-          alert('Movie deleted successfully!');
+          this.notification.showSuccess('Movie deleted successfully.');
           this.router.navigate(['/']);
         },
         error: (err) => {
           console.error('Delete failed', err);
-          alert('Failed to delete the movie. Please try again.');
+          this.notification.showError('Failed to delete the movie. Please try again.');
         }
       });
     }

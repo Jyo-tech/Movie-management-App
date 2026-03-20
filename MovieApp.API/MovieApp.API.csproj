@@ -21,4 +21,10 @@
     <ProjectReference Include="..\MovieApp.Infrastructure\MovieApp.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\MovieApp.Infrastructure\Data\Seed\moviedata.json" Link="Data\Seed\moviedata.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

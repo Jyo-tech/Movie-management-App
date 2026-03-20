@@ -51,4 +51,18 @@ app.MapControllers();
 
 app.UseCors("AllowAngularUI");
 
+var seedEnabled = app.Configuration.GetValue<bool?>("Seed:Enabled") ?? app.Environment.IsDevelopment();
+var forceFullReseed = app.Configuration.GetValue("Seed:ForceFullReseed", false) && app.Environment.IsDevelopment();
+
+if (seedEnabled)
+{
+    using var scope = app.Services.CreateScope();
+    var sp = scope.ServiceProvider;
+    var db = sp.GetRequiredService<AppDbContext>();
+    var logger = sp.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(DbSeeder));
+    var contentRoot = sp.GetRequiredService<IHostEnvironment>().ContentRootPath;
+
+    await DbSeeder.SeedAsync(db, logger, forceFullReseed, contentRoot);
+}
+
 app.Run();

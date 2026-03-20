@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -34,11 +34,6 @@ namespace MovieApp.Infrastructure.Data.Migrations
                 {
                     table.PrimaryKey("PK_Movies", x => x.Id);
                 });
-
-            migrationBuilder.InsertData(
-                table: "Movies",
-                columns: new[] { "Id", "Actors", "Directors", "Genres", "ImageUrl", "Plot", "Rank", "Rating", "ReleaseDate", "RunningTimeSecs", "Title", "Year" },
-                values: new object[] { 1, "Tom Berenger, Martin Sheen, Stephen Lang", "Ronald F. Maxwell", "Drama, History, War", "https://ia.media-imdb.com/images/M/MV5BMTQwMjE3NDg4NV5BMl5BanBnXkFtZTcwMDI3MTE2Mw@@._V1_SX400_.jpg", "In 1863, the Northern and Southern forces fight at Gettysburg in the decisive battle of the American Civil War.", 3545, 7.5, new DateTime(1993, 10, 8, 0, 0, 0, 0, DateTimeKind.Utc), 16260, "Gettysburg", 1993 });
         }
 
         /// <inheritdoc />
