@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieApp.Domain.Entities;
 using MovieApp.Infrastructure.Data;
 using MovieApp.Infrastructure.Repositories;
+using NUnit.Framework;
 
 namespace MovieApp.Infrastructure.Tests.Repositories;
 
