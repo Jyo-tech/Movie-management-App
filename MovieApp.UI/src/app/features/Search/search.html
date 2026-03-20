@@ -20,8 +20,9 @@
             id="title"
             name="title"
             [(ngModel)]="searchTitle"
-            placeholder="e.g. Gettysburg"
+            placeholder="Full title as stored (exact match)"
             autocomplete="off">
+          <p class="field-hint">Match is exact (case-insensitive), not partial.</p>
         </div>
 
         <div class="form-field">
@@ -75,7 +76,14 @@
   </div>
 
   <div *ngIf="!loading && !error && movies.length > 0" class="results-section">
-    <h2>Search results ({{ movies.length }})</h2>
+    <div class="results-heading">
+      <h2>Search results</h2>
+      <p class="results-count">Showing {{ movies.length }} of {{ totalCount }} — page {{ page }} of {{ totalPages }}</p>
+      <div *ngIf="totalPages > 1" class="pagination">
+        <button type="button" class="btn btn-secondary" (click)="goToPage(page - 1)" [disabled]="page <= 1">Previous</button>
+        <button type="button" class="btn btn-secondary" (click)="goToPage(page + 1)" [disabled]="page >= totalPages">Next</button>
+      </div>
+    </div>
 
     <div class="movie-grid">
       <div *ngFor="let movie of movies" class="movie-card shadow">

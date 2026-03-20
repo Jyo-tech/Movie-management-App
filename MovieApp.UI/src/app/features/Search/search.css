@@ -193,12 +193,29 @@
     background: #5a6268;
 }
 
-.results-section h2 {
+.results-heading {
     margin-bottom: 1.5rem;
+}
+
+.results-heading h2 {
+    margin: 0 0 0.35rem;
     color: #333;
     border-bottom: 2px solid #007bff;
     display: inline-block;
     padding-bottom: 0.5rem;
+}
+
+.results-count {
+    margin: 0 0 1rem;
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+.results-heading .pagination {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
 }
 
 /* Reusing grid styles from Home Component */

@@ -4,6 +4,8 @@ import { of, throwError } from 'rxjs';
 import { Search } from './search';
 import { MovieService } from '../../core/movie-service';
 
+const emptyPage = { items: [], totalCount: 0, page: 1, pageSize: 24 };
+
 describe('Search', () => {
   let component: Search;
   let fixture: ComponentFixture<Search>;
@@ -35,34 +37,40 @@ describe('Search', () => {
   it('should call searchMovies on onSearch with title', () => {
     const searchQuery = 'Inception';
     component.searchTitle = searchQuery;
-    movieService.searchMovies.mockReturnValue(of([]));
+    movieService.searchMovies.mockReturnValue(of(emptyPage));
     component.onSearch();
 
     expect(component.loading).toBe(false);
     expect(component.error).toBeNull();
     expect(component.hasSearched).toBe(true);
-    expect(movieService.searchMovies).toHaveBeenCalledWith(searchQuery, undefined, undefined);
+    expect(movieService.searchMovies).toHaveBeenCalledWith(searchQuery, undefined, undefined, 1, 24);
   });
 
   it('should call searchMovies on onSearch with title, year, and genre', () => {
     component.searchTitle = 'Inception';
     component.searchYear = 2010;
     component.searchGenre = 'Sci-Fi';
-    movieService.searchMovies.mockReturnValue(of([]));
+    movieService.searchMovies.mockReturnValue(of(emptyPage));
     component.onSearch();
 
     expect(component.loading).toBe(false);
     expect(component.error).toBeNull();
     expect(component.hasSearched).toBe(true);
-    expect(movieService.searchMovies).toHaveBeenCalledWith('Inception', 'Sci-Fi', 2010);
+    expect(movieService.searchMovies).toHaveBeenCalledWith('Inception', 'Sci-Fi', 2010, 1, 24);
   });
 
   it('should handle search success and set movies', () => {
-    const mockMovies = [{ title: 'Inception' }];
-    movieService.searchMovies.mockReturnValue(of(mockMovies));
+    const mockPage = {
+      items: [{ title: 'Inception' } as any],
+      totalCount: 1,
+      page: 1,
+      pageSize: 24
+    };
+    movieService.searchMovies.mockReturnValue(of(mockPage));
     component.onSearch();
 
-    expect(component.movies).toEqual(mockMovies);
+    expect(component.movies).toEqual(mockPage.items);
+    expect(component.totalCount).toBe(1);
     expect(component.loading).toBe(false);
     expect(component.error).toBeNull();
     expect(component.hasSearched).toBe(true);
@@ -81,7 +89,9 @@ describe('Search', () => {
     component.searchTitle = 'Inception';
     component.searchYear = 2010;
     component.searchGenre = 'Sci-Fi';
-    component.movies = [{ title: 'Inception' }];
+    component.movies = [{ title: 'Inception' } as any];
+    component.totalCount = 5;
+    component.page = 2;
     component.error = 'Error';
     component.hasSearched = true;
 
@@ -91,6 +101,8 @@ describe('Search', () => {
     expect(component.searchYear).toBeNull();
     expect(component.searchGenre).toBe('');
     expect(component.movies).toEqual([]);
+    expect(component.totalCount).toBe(0);
+    expect(component.page).toBe(1);
     expect(component.error).toBeNull();
     expect(component.hasSearched).toBe(false);
   });

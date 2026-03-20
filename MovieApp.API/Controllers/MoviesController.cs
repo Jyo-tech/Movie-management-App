@@ -35,16 +35,26 @@ public class MoviesController : ControllerBase
         }
     }
 
-    // GET: api/movies/search?title={title}&genre={genre}&year={year}
+    // GET: api/movies/search?title=&genre=&year=&page=1&pageSize=24
     [HttpGet("search")]
-    public async Task<ActionResult<IEnumerable<MovieDto>>> SearchMovies([FromQuery] string? title, [FromQuery] string? genre, [FromQuery] int? year)
+    public async Task<ActionResult<PagedMoviesDto>> SearchMovies(
+        [FromQuery] string? title,
+        [FromQuery] string? genre,
+        [FromQuery] int? year,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 24)
     {
         try
         {
-            _logger.LogInformation("Searching movies with criteria: title={Title}, genre={Genre}, year={Year}.", title, genre, year);
-            var movies = await _movieService.SearchMoviesAsync(title, genre, year);
-            _logger.LogInformation("Successfully found {Count} movies matching the criteria.", movies.Count());
-            return Ok(movies);
+            _logger.LogInformation(
+                "Searching movies: title={Title}, genre={Genre}, year={Year}, page={Page}, pageSize={PageSize}.",
+                title, genre, year, page, pageSize);
+            var result = await _movieService.SearchMoviesAsync(title, genre, year, page, pageSize);
+            _logger.LogInformation(
+                "Search returned {PageCount} movies (total matching: {Total}).",
+                result.Items.Count,
+                result.TotalCount);
+            return Ok(result);
         }
         catch (Exception ex)
         {

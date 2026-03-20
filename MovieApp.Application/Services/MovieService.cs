@@ -8,8 +8,20 @@ namespace MovieApp.Application.Services;
 
 public class MovieService : IMovieService
 {
+    private const int MaxSearchPageSize = 100;
+
     private readonly IMovieRepository _movieRepository;
     private readonly MapToMovieDto _mapper = new MapToMovieDto();
+
+    /// <summary>
+    /// Npgsql maps <c>timestamptz</c> to UTC only; JSON/date inputs are usually <see cref="DateTimeKind.Unspecified"/>.
+    /// </summary>
+    private static DateTime ToPersistableUtc(DateTime value) => value.Kind switch
+    {
+        DateTimeKind.Utc => value,
+        DateTimeKind.Local => value.ToUniversalTime(),
+        _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
+    };
 
     public MovieService(IMovieRepository movieRepository)
     {
@@ -25,11 +37,20 @@ public class MovieService : IMovieService
         return movies.Select(m => _mapper.MapToDto(m));
     }
 
-    public async Task<IEnumerable<MovieDto>> SearchMoviesAsync(string? title, string? genre, int? year)
+    public async Task<PagedMoviesDto> SearchMoviesAsync(string? title, string? genre, int? year, int page = 1, int pageSize = 24)
     {
-        var movies = await _movieRepository.SearchAsync(title, genre, year);
-        
-        return movies.Select(m => _mapper.MapToDto(m));
+        page = Math.Max(1, page);
+        pageSize = Math.Clamp(pageSize, 1, MaxSearchPageSize);
+
+        var pageResult = await _movieRepository.SearchAsync(title, genre, year, page, pageSize);
+
+        return new PagedMoviesDto
+        {
+            Items = pageResult.Items.Select(m => _mapper.MapToDto(m)).ToList(),
+            TotalCount = pageResult.TotalCount,
+            Page = page,
+            PageSize = pageSize
+        };
     }
 
     public async Task<MovieDto> CreateMovieAsync(MovieDto movieDto)
@@ -39,7 +60,7 @@ public class MovieService : IMovieService
             Title = movieDto.Title,
             Year = movieDto.Year,
             Directors = movieDto.Directors,
-            ReleaseDate = movieDto.ReleaseDate,
+            ReleaseDate = ToPersistableUtc(movieDto.ReleaseDate),
             Rating = movieDto.Rating,
             Genres = movieDto.Genres,
             Actors = movieDto.Actors,
@@ -74,7 +95,7 @@ public class MovieService : IMovieService
         movie.Title = movieDto.Title;
         movie.Year = movieDto.Year;
         movie.Directors = movieDto.Directors;
-        movie.ReleaseDate = movieDto.ReleaseDate;
+        movie.ReleaseDate = ToPersistableUtc(movieDto.ReleaseDate);
         movie.Rating = movieDto.Rating;
         movie.Genres = movieDto.Genres;
         movie.Actors = movieDto.Actors;

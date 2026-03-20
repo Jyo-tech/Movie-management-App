@@ -6,7 +6,7 @@ public interface IMovieService
 {
     Task<IEnumerable<MovieDto>> GetLatestMoviesAsync(int count = 4);
 
-    Task<IEnumerable<MovieDto>> SearchMoviesAsync(string? title, string? genre, int? year);
+    Task<PagedMoviesDto> SearchMoviesAsync(string? title, string? genre, int? year, int page = 1, int pageSize = 24);
 
     Task<MovieDto> CreateMovieAsync(MovieDto movieDto);
 

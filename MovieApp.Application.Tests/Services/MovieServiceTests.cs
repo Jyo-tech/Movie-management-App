@@ -69,13 +69,16 @@ public class MovieServiceTests
     public async Task SearchMoviesAsync_ReturnsMappedDtos()
     {
         var movies = new[] { SampleEntity(3, "FindMe") };
-        _repository.SearchAsync("x", "g", 1999).Returns(movies);
+        _repository.SearchAsync("x", "g", 1999, 1, 24).Returns(new MovieSearchPage(movies, 42));
 
-        var result = (await _sut.SearchMoviesAsync("x", "g", 1999)).ToList();
+        var result = await _sut.SearchMoviesAsync("x", "g", 1999, 1, 24);
 
-        Assert.That(result, Has.Count.EqualTo(1));
-        Assert.That(result[0].Title, Is.EqualTo("FindMe"));
-        await _repository.Received(1).SearchAsync("x", "g", 1999);
+        Assert.That(result.Items, Has.Count.EqualTo(1));
+        Assert.That(result.Items[0].Title, Is.EqualTo("FindMe"));
+        Assert.That(result.TotalCount, Is.EqualTo(42));
+        Assert.That(result.Page, Is.EqualTo(1));
+        Assert.That(result.PageSize, Is.EqualTo(24));
+        await _repository.Received(1).SearchAsync("x", "g", 1999, 1, 24);
     }
 
     [Test]

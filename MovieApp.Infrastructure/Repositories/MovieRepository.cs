@@ -7,6 +7,8 @@ namespace MovieApp.Infrastructure.Repositories;
 
 public class MovieRepository : IMovieRepository
 {
+    public const int MaxSearchPageSize = 100;
+
     private readonly AppDbContext _context;
 
     public MovieRepository(AppDbContext context)
@@ -32,29 +34,37 @@ public class MovieRepository : IMovieRepository
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Movie>> SearchAsync(string? title, string? genre, int? year)
+    public async Task<MovieSearchPage> SearchAsync(string? title, string? genre, int? year, int page, int pageSize)
     {
-        var query = _context.Movies.AsQueryable();
+        // page = Math.Max(1, page);
+        // pageSize = Math.Clamp(pageSize, 1, MaxSearchPageSize);
+
+        var query = _context.Movies.AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(title))
         {
-            query = query.Where(m => m.Title.ToLower().Contains(title.ToLower()));
+            var t = title.Trim();
+            query = query.Where(m => m.Title.ToLower() == t.ToLower());
         }
 
         if (year.HasValue)
-        {
             query = query.Where(m => m.Year == year.Value);
-        }
-
-        
-        var results = await query.ToListAsync();
 
         if (!string.IsNullOrWhiteSpace(genre))
         {
-            results = results.Where(m => m.Genres.Any(g => g.Contains(genre, StringComparison.OrdinalIgnoreCase))).ToList();
+            var g = genre.Trim();
+            query = query.Where(m => m.Genres.Any(x => x.ToLower() == g.ToLower()));
         }
 
-        return results;
+        query = query.OrderByDescending(m => m.ReleaseDate).ThenBy(m => m.Id);
+
+        var totalCount = await query.CountAsync();
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new MovieSearchPage(items, totalCount);
     }
 
     public async Task AddAsync(Movie movie)

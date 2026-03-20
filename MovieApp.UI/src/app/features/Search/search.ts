@@ -17,15 +17,34 @@ export class Search {
   searchGenre: string = '';
 
   movies: MovieDto[] = [];
+  totalCount = 0;
+  page = 1;
+  readonly pageSize = 24;
   loading: boolean = false;
   error: string | null = null;
   hasSearched: boolean = false;
 
   availableGenres: string[] = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance'];
 
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.totalCount / this.pageSize));
+  }
+
   constructor(private movieService: MovieService , private zone: NgZone) {}
 
   onSearch() {
+    this.page = 1;
+    this.runSearch();
+  }
+
+  goToPage(p: number) {
+    const next = Math.max(1, Math.min(p, this.totalPages));
+    if (next === this.page) return;
+    this.page = next;
+    this.runSearch();
+  }
+
+  private runSearch() {
     this.loading = true;
     this.error = null;
     this.hasSearched = true;
@@ -34,10 +53,12 @@ export class Search {
     const genreParam = this.searchGenre || undefined;
     const yearParam = this.searchYear || undefined;
 
-    this.movieService.searchMovies(titleParam, genreParam, yearParam).subscribe({
-      next: (movies) => {
+    this.movieService.searchMovies(titleParam, genreParam, yearParam, this.page, this.pageSize).subscribe({
+      next: (result) => {
         this.zone.run(() => {
-        this.movies = movies;
+        this.movies = result.items;
+        this.totalCount = result.totalCount;
+        this.page = result.page;
         this.loading = false;
       });
       },
@@ -48,7 +69,7 @@ export class Search {
         });
       }
     });
-   
+
   }
 
   clearSearch() {
@@ -56,6 +77,8 @@ export class Search {
     this.searchYear = null;
     this.searchGenre = '';
     this.movies = [];
+    this.totalCount = 0;
+    this.page = 1;
     this.error = null;
     this.hasSearched = false;
   }

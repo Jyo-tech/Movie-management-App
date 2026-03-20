@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MovieDto } from '../models/movie.model';
+import { PagedMoviesDto } from '../models/paged-movies.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -16,13 +17,21 @@ export class MovieService {
     return this.http.get<MovieDto[]>(environment.apiUrl + '/latest');
    }
 
-   searchMovies(title?: string, genre?: string, year?: number): Observable<MovieDto[]> {
-    let params = new HttpParams();
+   searchMovies(
+    title?: string,
+    genre?: string,
+    year?: number,
+    page: number = 1,
+    pageSize: number = 24
+  ): Observable<PagedMoviesDto> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
     if (title) params = params.set('title', title);
     if (genre) params = params.set('genre', genre);
-    if (year) params = params.set('year', year.toString());
+    if (year != null) params = params.set('year', year.toString());
 
-    return this.http.get<MovieDto[]>(`${environment.apiUrl}/search`, { params });
+    return this.http.get<PagedMoviesDto>(`${environment.apiUrl}/search`, { params });
   }
 
   getMovieById(id: number): Observable<MovieDto> {

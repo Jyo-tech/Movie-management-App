@@ -76,23 +76,30 @@ public class MoviesControllerTests
     public async Task SearchMovies_ReturnsOk_WithMatchingMovies()
     {
         var movies = new[] { SampleMovie(3) };
-        _movieService.SearchMoviesAsync("Inception", "Sci-Fi", 2010).Returns(movies);
+        var paged = new PagedMoviesDto
+        {
+            Items = movies.ToList(),
+            TotalCount = 1,
+            Page = 1,
+            PageSize = 24
+        };
+        _movieService.SearchMoviesAsync("Inception", "Sci-Fi", 2010, 1, 24).Returns(paged);
 
-        var result = await _controller.SearchMovies("Inception", "Sci-Fi", 2010);
+        var result = await _controller.SearchMovies("Inception", "Sci-Fi", 2010, 1, 24);
 
         Assert.That(result.Result, Is.TypeOf<OkObjectResult>());
         var ok = (OkObjectResult)result.Result!;
-        Assert.That(ok.Value, Is.EqualTo(movies));
-        await _movieService.Received(1).SearchMoviesAsync("Inception", "Sci-Fi", 2010);
+        Assert.That(ok.Value, Is.EqualTo(paged));
+        await _movieService.Received(1).SearchMoviesAsync("Inception", "Sci-Fi", 2010, 1, 24);
     }
 
     [Test]
     public async Task SearchMovies_Returns500_WhenServiceThrows()
     {
-        _movieService.SearchMoviesAsync(Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<int?>())
-            .Returns(Task.FromException<IEnumerable<MovieDto>>(new InvalidOperationException()));
+        _movieService.SearchMoviesAsync(Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<int?>(), Arg.Any<int>(), Arg.Any<int>())
+            .Returns(Task.FromException<PagedMoviesDto>(new InvalidOperationException()));
 
-        var result = await _controller.SearchMovies(null, null, null);
+        var result = await _controller.SearchMovies(null, null, null, 1, 24);
 
         Assert.That(result.Result, Is.TypeOf<ObjectResult>());
         Assert.That(((ObjectResult)result.Result!).StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));

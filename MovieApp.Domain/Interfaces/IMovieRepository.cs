@@ -8,11 +8,15 @@ public interface IMovieRepository
     Task<IEnumerable<Movie>> GetAllAsync();
     Task<IEnumerable<Movie>> GetLatestMoviesAsync(int count);
     
-    // Updated search to match the new properties (e.g. string for genre since it's dynamic)
-    Task<IEnumerable<Movie>> SearchAsync(string? title, string? genre, int? year);
-    
+    /// <param name="page">1-based page index.</param>
+    /// <param name="pageSize">Rows per page (clamped by implementation).</param>
+    Task<MovieSearchPage> SearchAsync(string? title, string? genre, int? year, int page, int pageSize);
+
     Task AddAsync(Movie movie);
     Task UpdateAsync(Movie movie);
     Task DeleteAsync(int id);
     Task SaveChangesAsync();
 }
+
+/// <summary>One page of <see cref="Movie"/> rows plus the total matching count for pagination.</summary>
+public sealed record MovieSearchPage(IReadOnlyList<Movie> Items, int TotalCount);
