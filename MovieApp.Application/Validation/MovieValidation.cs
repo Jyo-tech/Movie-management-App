@@ -49,7 +49,4 @@ namespace MovieApp.Application.Validation
 
         }
     }
-    {
-        
-    }
 }

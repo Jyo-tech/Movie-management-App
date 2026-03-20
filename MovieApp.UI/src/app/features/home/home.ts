@@ -26,13 +26,11 @@ export class Home implements OnInit {
   getLatestMovies() {
     this.movieService.getLatestMovies(4).subscribe({
       next: (movies) => {
-        console.log(movies);
         this.latestMovies = movies;
         this.loading = false;
       },
       error: (err) => {
         console.error(err);
-        console.log('Failed to load latest movies. Please try again later.');
         this.error = 'Failed to load latest movies. Please try again later.';
         this.loading = false;
       }

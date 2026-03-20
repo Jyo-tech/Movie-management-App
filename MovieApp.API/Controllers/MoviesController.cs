@@ -56,6 +56,12 @@ public class MoviesController : ControllerBase
     public async Task<ActionResult<MovieDto>> CreateMovie([FromBody] MovieDto movieDto)
     {
         _logger.LogInformation("Creating new movie with title: {Title}.", movieDto.Title);
+        
+        if (!ModelState.IsValid)
+        {
+            _logger.LogWarning("Invalid model state for movie update.");
+            return BadRequest(ModelState);
+        }
         var createdMovie = await _movieService.CreateMovieAsync(movieDto);
         _logger.LogInformation("Successfully created movie with id: {MovieId}.", createdMovie.Id);
         return CreatedAtAction(nameof(GetMovieById), new { id = createdMovie.Id }, createdMovie);

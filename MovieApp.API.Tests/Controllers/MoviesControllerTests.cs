@@ -61,11 +61,12 @@ public class MoviesControllerTests
         _movieService.GetLatestMoviesAsync(4)
             .Returns(Task.FromException<IEnumerable<MovieDto>>(new InvalidOperationException("db error")));
 
-        var result = await _controller.GetLatestMovies();
+            var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await _controller.GetLatestMovies()
+        );
 
-        Assert.That(result.Result, Is.TypeOf<ObjectResult>());
-        var obj = (ObjectResult)result.Result!;
-        Assert.That(obj.StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
+        Assert.That(ex!.Message, Is.EqualTo("db error"));
+       
     }
 
     #endregion
@@ -99,11 +100,13 @@ public class MoviesControllerTests
         _movieService.SearchMoviesAsync(Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<int?>(), Arg.Any<int>(), Arg.Any<int>())
             .Returns(Task.FromException<PagedMoviesDto>(new InvalidOperationException()));
 
-        var result = await _controller.SearchMovies(null, null, null, 1, 24);
+         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await _controller.SearchMovies("Inception", "Sci-Fi", 2010, 1, 24)
+        );
 
-        Assert.That(result.Result, Is.TypeOf<ObjectResult>());
-        Assert.That(((ObjectResult)result.Result!).StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
-    }
+        Assert.That(ex!.Message, Is.EqualTo("Operation is not valid due to the current state of the object."));
+
+           }
 
     #endregion
 
@@ -145,11 +148,11 @@ public class MoviesControllerTests
         _movieService.CreateMovieAsync(dto)
             .Returns(Task.FromException<MovieDto>(new Exception("fail")));
 
-        var result = await _controller.CreateMovie(dto);
-
-        Assert.That(result.Result, Is.TypeOf<ObjectResult>());
-        Assert.That(((ObjectResult)result.Result!).StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
-    }
+            var ex = Assert.ThrowsAsync<Exception>(async () =>
+                await _controller.CreateMovie(dto)
+            );
+        Assert.That(ex!.Message, Is.EqualTo("fail"));
+            }
 
     #endregion
 
@@ -181,13 +184,15 @@ public class MoviesControllerTests
     public async Task GetMovieById_Returns500_WhenServiceThrows()
     {
         _movieService.GetMovieByIdAsync(1)
-            .Returns(Task.FromException<MovieDto?>(new InvalidOperationException()));
+        .Returns(Task.FromException<MovieDto?>(new InvalidOperationException("fail")));
 
-        var result = await _controller.GetMovieById(1);
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await _controller.GetMovieById(1)
+        );
 
-        Assert.That(result.Result, Is.TypeOf<ObjectResult>());
-        Assert.That(((ObjectResult)result.Result!).StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
+        Assert.That(ex!.Message, Is.EqualTo("fail"));
     }
+           
 
     #endregion
 
@@ -237,10 +242,11 @@ public class MoviesControllerTests
         _movieService.GetMovieByIdAsync(1).Returns(dto);
         _movieService.UpdateMovieAsync(1, dto).Returns(Task.FromException(new Exception("fail")));
 
-        var result = await _controller.UpdateMovie(1, dto);
+         var ex = Assert.ThrowsAsync<Exception>(async () =>
+            await _controller.UpdateMovie(1, dto)
+        );
 
-        Assert.That(result, Is.TypeOf<ObjectResult>());
-        Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
+        Assert.That(ex!.Message, Is.EqualTo("fail"));
     }
 
     #endregion
@@ -275,11 +281,11 @@ public class MoviesControllerTests
         _movieService.GetMovieByIdAsync(3).Returns(SampleMovie(3));
         _movieService.DeleteMovieAsync(3).Returns(Task.FromException(new Exception("fail")));
 
-        var result = await _controller.DeleteMovie(3);
-
-        Assert.That(result, Is.TypeOf<ObjectResult>());
-        Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo(StatusCodes.Status500InternalServerError));
-    }
+            var ex = Assert.ThrowsAsync<Exception>(async () =>
+                await _controller.DeleteMovie(3)
+            );
+        Assert.That(ex!.Message, Is.EqualTo("fail"));
+        }
 
     #endregion
 }

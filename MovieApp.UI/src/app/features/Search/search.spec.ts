@@ -3,6 +3,7 @@ import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
 import { Search } from './search';
+import { of } from 'rxjs';
 
 function validSearchForm(): NgForm {
   return {

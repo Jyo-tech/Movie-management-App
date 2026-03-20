@@ -107,6 +107,11 @@ describe('MovieForm', () => {
     const created = { id: 99 } as MovieDto;
     movieService.createMovie.mockReturnValue(of(created));
 
+      const validMovieForm = () => ({
+      invalid: false,
+      form: { markAllAsTouched: jest.fn() },
+    } as unknown as NgForm);
+
     component.onSubmit(validMovieForm());
 
     expect(movieService.createMovie).toHaveBeenCalled();
@@ -114,3 +119,5 @@ describe('MovieForm', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/movies', 99]);
   });
 });
+
+

@@ -28,7 +28,6 @@ export class Notification {
   }
 
   private clearAfterDelay(): void {
-    console.log("cleared");
     setTimeout(() => {
       this.notificationSubject.next(null);
     }, 4000);

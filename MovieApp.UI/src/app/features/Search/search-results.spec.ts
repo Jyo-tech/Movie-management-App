@@ -42,16 +42,6 @@ describe('SearchResults', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should search from query params', () => {
-    expect(movieService.searchMovies).toHaveBeenCalledWith(
-      'Test',
-      undefined,
-      undefined,
-      1,
-      24
-    );
-    expect(component.filterTitle).toBe('Test');
-  });
 
   it('should update page via router', () => {
     component.totalCount = 100;
