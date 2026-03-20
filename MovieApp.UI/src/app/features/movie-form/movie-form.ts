@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule, NgForm } from '@angular/forms';
 import { MovieService } from '../../core/movie-service';
 import { MovieDto } from '../../models/movie.model';
 import { Notification } from '../../core/notification';
@@ -16,7 +16,10 @@ export class MovieForm implements OnInit {
   isEditMode: boolean = false;
   loading = false;
   actorsInput: string = '';
-  
+
+  /** Empty string or http(s) URL with no spaces (optional poster link). */
+  readonly optionalHttpUrlPattern = '^(|https?://\\S+)$';
+
   availableGenres: string[] = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi', 'Thriller', 'Romance', 'Documentary', 'Crime', 'Mystery', 'History', 'War'];
 
   movie: MovieDto = {
@@ -31,7 +34,7 @@ export class MovieForm implements OnInit {
     imageUrl: '',
     plot: '',
     rank: 1,
-    runningTimeSecs: 0
+    runningTimeSecs: 3600,
   };
 
   constructor(
@@ -76,14 +79,19 @@ export class MovieForm implements OnInit {
     });
   }
 
-    onSubmit(): void {
+  onSubmit(form: NgForm): void {
     if (this.loading) return;
+    if (form.invalid) {
+      form.form.markAllAsTouched();
+      return;
+    }
+
     this.loading = true;
 
     this.movie.actors = this.actorsInput
       .split(',')
-      .map(a => a.trim())
-      .filter(a => a.length > 0);
+      .map((a) => a.trim())
+      .filter((a) => a.length > 0);
 
     if (this.movie.actors.length === 0) {
       this.notificationService.showError('Actors must not be empty.');
@@ -113,13 +121,21 @@ export class MovieForm implements OnInit {
   private handleError(error: any): void {
     this.loading = false;
     console.error('API Error', error);
-    
-    if (error.status === 400 && error.error && error.error.errors) {
-       const validationErrors = Object.values(error.error.errors).flat().join(' ');
-       this.notificationService.showError(`Validation failed: ${validationErrors}`);
-    } else {
-       this.notificationService.showError('An unexpected error occurred while saving the movie.');
+
+    if (error.status === 400 && error.error) {
+      const body = error.error;
+      if (body.errors) {
+        const validationErrors = Object.values(body.errors).flat().join(' ');
+        this.notificationService.showError(`Validation failed: ${validationErrors}`);
+        return;
+      }
+      if (typeof body.detail === 'string' && body.detail) {
+        this.notificationService.showError(body.detail);
+        return;
+      }
     }
+
+    this.notificationService.showError('An unexpected error occurred while saving the movie.');
   }
 
 }

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-search',
@@ -59,7 +59,12 @@ export class Search implements OnInit, OnDestroy {
     }
   }
 
-  onSearch(): void {
+  onSearch(form: NgForm): void {
+    if (form.invalid) {
+      form.form.markAllAsTouched();
+      return;
+    }
+
     const title = this.searchTitle.trim();
     const queryParams: Record<string, string | number> = { page: 1 };
     if (title) queryParams['title'] = title;
@@ -71,10 +76,16 @@ export class Search implements OnInit, OnDestroy {
     void this.router.navigate(['/search/results'], { queryParams });
   }
 
-  clearSearch(): void {
+  clearSearch(form?: NgForm): void {
     this.searchTitle = '';
     this.searchYear = null;
     this.searchGenre = '';
+    form?.resetForm({
+      title: '',
+      year: null,
+      genre: '',
+    });
     void this.router.navigate(['/search'], { queryParams: {} });
   }
 }
+

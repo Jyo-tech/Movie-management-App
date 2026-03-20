@@ -22,17 +22,19 @@ builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 
 builder.Services.AddScoped<IMovieService, MovieService>();
 
+var origins = builder.Configuration
+    .GetSection("AllowAngularUI:Origins")
+    .Get<string[]>();
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularUI",
-        policy =>
-        {
-            policy.WithOrigins(builder.Configuration["AllowAngularUI:Origins"]?.Split(",") ?? new string[0])
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowAngularUI", policy =>
+    {
+        policy.WithOrigins(origins ?? Array.Empty<string>())
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
-
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //builder.Services.AddOpenApi();
 

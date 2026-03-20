@@ -110,6 +110,17 @@
     box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.18);
 }
 
+.field-input.ng-invalid.ng-touched {
+    border-color: #dc3545;
+}
+
+.field-error {
+    margin: 0.35rem 0 0;
+    font-size: 0.8rem;
+    color: #dc3545;
+    line-height: 1.35;
+}
+
 .form-section {
     margin-bottom: 1.5rem;
 }

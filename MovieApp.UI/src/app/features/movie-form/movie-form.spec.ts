@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 import { MovieForm } from './movie-form';
 import { MovieService } from '../../core/movie-service';
@@ -54,6 +55,7 @@ describe('MovieForm', () => {
     expect(component.isEditMode).toBe(false);
     expect(component.movie.releaseDate).toBe(today);
     expect(component.movie.genres).toEqual([component.availableGenres[0]]);
+    expect(component.movie.runningTimeSecs).toBe(3600);
   });
 
   it('should load movie details when route has id param', () => {
@@ -84,14 +86,16 @@ describe('MovieForm', () => {
     expect(component.loading).toBe(false);
   });
 
-  it('should show error and not call movieService when actors input is empty on submit', () => {
-    component.isEditMode = false;
-    component.actorsInput = '   ';
-    component.movie = { ...component.movie, id: 0 } as any;
+  it('should not call API when form invalid', () => {
+    const markAll = jest.fn();
+    const invalidForm = {
+      invalid: true,
+      form: { markAllAsTouched: markAll },
+    } as unknown as NgForm;
 
-    component.onSubmit();
+    component.onSubmit(invalidForm);
 
-    expect(notificationService.showError).toHaveBeenCalledWith('Actors must not be empty.');
+    expect(markAll).toHaveBeenCalled();
     expect(movieService.createMovie).not.toHaveBeenCalled();
     expect(component.loading).toBe(false);
   });
@@ -103,7 +107,7 @@ describe('MovieForm', () => {
     const created = { id: 99 } as MovieDto;
     movieService.createMovie.mockReturnValue(of(created));
 
-    component.onSubmit();
+    component.onSubmit(validMovieForm());
 
     expect(movieService.createMovie).toHaveBeenCalled();
     expect(notificationService.showSuccess).toHaveBeenCalledWith('Movie created successfully!');

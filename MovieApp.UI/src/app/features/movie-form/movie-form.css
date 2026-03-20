@@ -76,6 +76,12 @@ textarea.ng-invalid.ng-touched {
     margin-top: 0.4rem;
 }
 
+.hint-char-count {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.35rem;
+}
+
 .form-actions {
     display: flex;
     justify-content: flex-end;

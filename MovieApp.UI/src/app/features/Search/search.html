@@ -10,7 +10,7 @@
       <p class="search-panel-sub">Use one or more fields—leave the rest open for broader results.</p>
     </div>
 
-    <form (ngSubmit)="onSearch()" #searchForm="ngForm">
+    <form (ngSubmit)="onSearch(searchForm)" #searchForm="ngForm" novalidate>
       <div class="form-row form-row--title-year">
         <div class="form-field">
           <label class="field-label" for="title">Title</label>
@@ -20,6 +20,7 @@
             id="title"
             name="title"
             [(ngModel)]="searchTitle"
+            maxlength="200"
             placeholder="Full title as stored (exact match)"
             autocomplete="off"
             aria-describedby="title-search-hint">
@@ -35,7 +36,11 @@
             [(ngModel)]="searchYear"
             placeholder="e.g. 1993"
             min="1900"
-            max="2100">
+            max="2100"
+            #yearNg="ngModel">
+          <p *ngIf="yearNg.invalid && yearNg.touched" class="field-error" role="alert">
+            Enter a year between 1900 and 2100, or leave blank.
+          </p>
         </div>
       </div>
       <p id="title-search-hint" class="field-hint field-hint-below-row">Title match is exact (case-insensitive), not partial.</p>
@@ -54,8 +59,8 @@
       </div>
 
       <div class="form-actions">
-        <button type="button" class="btn btn-secondary" (click)="clearSearch()">Clear</button>
-        <button type="submit" class="btn btn-primary">Search movies</button>
+        <button type="button" class="btn btn-secondary" (click)="clearSearch(searchForm)">Clear</button>
+        <button type="submit" class="btn btn-primary" [disabled]="searchForm.invalid">Search movies</button>
       </div>
     </form>
   </div>
