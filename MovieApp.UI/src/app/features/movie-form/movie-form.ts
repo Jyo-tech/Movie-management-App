@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {  Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MovieService } from '../../core/movie-service';
@@ -40,10 +40,18 @@ export class MovieForm implements OnInit {
   constructor(
     private movieService: MovieService,
     private router: Router,
-      private notificationService: Notification,
-      private route: ActivatedRoute
-  ) {
+    private notificationService: Notification,
+    private route: ActivatedRoute
+  ) {}
 
+  /** API primary genre may not appear in the static dropdown list. */
+  get primaryGenreNotInList(): boolean {
+    const p = this.movie.genres?.[0];
+    return !!p && !this.availableGenres.includes(p);
+  }
+
+  get plotLength(): number {
+    return this.movie.plot?.length ?? 0;
   }
 
   ngOnInit(): void {
@@ -64,12 +72,19 @@ export class MovieForm implements OnInit {
     this.movieService.getMovieById(id).subscribe({
       next: (movie) => {
         this.movie = movie;
-               if (this.movie.releaseDate) {
-           this.movie.releaseDate = new Date(this.movie.releaseDate).toISOString().split('T')[0];
+        this.movie.plot = this.movie.plot ?? '';
+        this.movie.imageUrl = this.movie.imageUrl ?? '';
+        if (!this.movie.genres?.length) {
+          this.movie.genres = [this.availableGenres[0]];
+        }
+        if (this.movie.releaseDate) {
+          this.movie.releaseDate = new Date(this.movie.releaseDate).toISOString().split('T')[0];
         }
 
-        this.actorsInput = this.movie.actors.join(', ');
-        
+        this.actorsInput = this.movie.actors?.length
+          ? this.movie.actors.map((a) => a.trim()).filter(Boolean).join(', ')
+          : '';
+
         this.loading = false;
       },
       error: () => {

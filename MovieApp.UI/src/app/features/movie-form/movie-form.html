@@ -125,6 +125,7 @@
           [(ngModel)]="movie.genres[0]"
           required
           #primaryGenre="ngModel">
+          <option *ngIf="primaryGenreNotInList" [value]="movie.genres[0]">{{ movie.genres[0] }}</option>
           <option *ngFor="let genre of availableGenres" [value]="genre">{{ genre }}</option>
         </select>
         <div *ngIf="primaryGenre.invalid && (primaryGenre.dirty || primaryGenre.touched)" class="error-text" role="alert">
@@ -141,11 +142,11 @@
         name="actors"
         [(ngModel)]="actorsInput"
         required
-        pattern="^\s*\S+(\s*,\s*\S+)*\s*$"
+        minlength="1"
         placeholder="e.g. Tom Hanks, Matthew McConaughey"
         #actors="ngModel">
       <div *ngIf="actors.invalid && (actors.dirty || actors.touched)" class="error-text" role="alert">
-        Enter at least one actor. Use commas between names.
+        Enter at least one actor (names can include spaces; separate multiple actors with commas).
       </div>
     </div>
 
@@ -174,7 +175,7 @@
         maxlength="1000"
         placeholder="Enter movie description..."
         #plot="ngModel"></textarea>
-      <div class="hint-char-count" *ngIf="movie.plot.length > 0">{{ movie.plot.length }} / 1000</div>
+      <div class="hint-char-count" *ngIf="plotLength > 0">{{ plotLength }} / 1000</div>
       <div *ngIf="plot.invalid && plot.errors?.['maxlength'] && (plot.dirty || plot.touched)" class="error-text" role="alert">
         Plot cannot exceed 1000 characters.
       </div>
