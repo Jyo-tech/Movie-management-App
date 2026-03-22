@@ -3,6 +3,7 @@ using MovieApp.Application.Services;
 using MovieApp.Domain.Entities;
 using MovieApp.Domain.Interfaces;
 using NSubstitute;
+using NUnit.Framework;
 
 namespace MovieApp.Application.Tests.Services;
 
@@ -27,7 +28,7 @@ public class MovieServiceTests
         Directors = "D",
         ReleaseDate = new DateTime(year, 1, 1),
         Rating = 7,
-        Genres = new List<string> { "Action" },
+        Genres = new string [] { "Action" },
         Actors = new List<string> { "A" },
         ImageUrl = "https://example.com/a.jpg",
         Plot = "P",

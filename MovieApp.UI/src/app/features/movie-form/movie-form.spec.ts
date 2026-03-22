@@ -6,7 +6,7 @@ import { NgForm } from '@angular/forms';
 
 import { MovieForm } from './movie-form';
 import { MovieService } from '../../core/movie-service';
-import { Notification } from '../../core/notification';
+import { Notification } from '../../core/notificationService';
 import { MovieDto } from '../../models/movie.model';
 
 describe('MovieForm', () => {

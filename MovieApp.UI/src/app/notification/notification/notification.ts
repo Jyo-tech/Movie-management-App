@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { Notification, NotificationMessage } from '../../core/notification';
+import { Notification, NotificationMessage } from '../../core/notificationService';
 
 @Component({
   selector: 'app-notification',

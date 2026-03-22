@@ -4,7 +4,7 @@ import { of, throwError } from 'rxjs';
 import { MovieDetails } from './movie-details';
 import { MovieService } from '../../core/movie-service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Notification } from '../../core/notification';
+import { Notification } from '../../core/notificationService';
 
 describe('MovieDetails', () => {
   let component: MovieDetails;

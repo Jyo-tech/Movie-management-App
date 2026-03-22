@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MovieService } from '../../core/movie-service';
 import { MovieDto } from '../../models/movie.model';
-import { Notification } from '../../core/notification';
+import { Notification } from '../../core/notificationService';
 @Component({
   selector: 'app-movie-form',
   imports: [CommonModule , FormsModule , RouterModule],

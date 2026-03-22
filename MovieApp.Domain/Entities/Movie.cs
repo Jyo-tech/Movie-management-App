@@ -18,5 +18,7 @@ public class Movie
     public int Rank { get; set; }
     
     // Storing in seconds to match the JSON, but we will format it as HH:mm:ss in the API/Frontend as requested.
-    public int RunningTimeSecs { get; set; } 
+    public int RunningTimeSecs { get; set; }
+
+
 }

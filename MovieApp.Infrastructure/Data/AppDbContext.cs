@@ -61,6 +61,6 @@ internal class MovieSeedDto
     
     [System.Text.Json.Serialization.JsonPropertyName("Running Time (secs)")]
     public int RunningTimeSecs { get; set; }
-    
+
     public string? Actors { get; set; }
 }

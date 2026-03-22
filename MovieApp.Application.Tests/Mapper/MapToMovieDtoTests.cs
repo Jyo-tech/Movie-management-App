@@ -1,6 +1,7 @@
 using MovieApp.Application.DTOs;
 using MovieApp.Application.Mapper;
 using MovieApp.Domain.Entities;
+using NUnit.Framework;
 
 namespace MovieApp.Application.Tests.Mapper;
 
@@ -21,7 +22,7 @@ public class MapToMovieDtoTests
             Directors = "Christopher Nolan",
             ReleaseDate = release,
             Rating = 8.8,
-            Genres = new List<string> { "Sci-Fi", "Thriller" },
+            Genres = new string [] {"Sci-Fi", "Thriller" },
             Actors = new List<string> { "Leonardo DiCaprio" },
             ImageUrl = "https://example.com/inception.jpg",
             Plot = "Dreams within dreams.",

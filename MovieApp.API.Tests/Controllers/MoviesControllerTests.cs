@@ -61,7 +61,7 @@ public class MoviesControllerTests
         _movieService.GetLatestMoviesAsync(4)
             .Returns(Task.FromException<IEnumerable<MovieDto>>(new InvalidOperationException("db error")));
 
-            var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await _controller.GetLatestMovies()
         );
 

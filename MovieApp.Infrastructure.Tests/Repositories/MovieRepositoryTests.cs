@@ -31,7 +31,7 @@ public class MovieRepositoryTests
         Directors = "Director",
         ReleaseDate = release,
         Rating = 7,
-        Genres = genres ?? new List<string> { "Action" },
+        Genres = genres?.ToArray() ?? Array.Empty<string>(),
         Actors = new List<string> { "Actor" },
         ImageUrl = "https://example.com/p.jpg",
         Plot = "Plot",

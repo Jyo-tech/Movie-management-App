@@ -57,4 +57,21 @@ describe('SearchResults', () => {
       })
     );
   });
+
+    it('should call search on NgOnit', () => {
+    component.totalCount = 100;
+    component.page = 2;
+
+    component.ngOnInit();
+
+    expect(movieService.searchMovies).toHaveBeenCalledWith(
+      'Test',
+      undefined,
+      undefined,
+      1,
+      24
+    );
+  });
+
+ 
 });

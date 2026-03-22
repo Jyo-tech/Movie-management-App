@@ -1,4 +1,5 @@
 using MovieApp.Domain.Entities;
+using NUnit.Framework;
 
 namespace MovieApp.Domain.Tests.Entities;
 
@@ -30,7 +31,7 @@ public class MovieTests
             Directors = "Director A",
             ReleaseDate = release,
             Rating = 8.2,
-            Genres = new List<string> { "Drama", "Thriller" },
+            Genres = new string[] { "Drama", "Thriller" },
             Actors = new List<string> { "Actor 1" },
             ImageUrl = "https://example.com/x.jpg",
             Plot = "Plot text",
@@ -40,7 +41,7 @@ public class MovieTests
 
         Assert.That(movie.Id, Is.EqualTo(10));
         Assert.That(movie.Title, Is.EqualTo("Sample"));
-        Assert.That(movie.Genres, Has.Count.EqualTo(2));
+        Assert.That(movie.Genres, Has.Length.EqualTo(2));
         Assert.That(movie.Genres[0], Is.EqualTo("Drama"));
         Assert.That(movie.ReleaseDate, Is.EqualTo(release));
         Assert.That(movie.RunningTimeSecs, Is.EqualTo(5400));

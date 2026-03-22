@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
 
 import { NotificationComponent } from './notification';
-import { Notification, NotificationMessage } from '../../core/notification';
+import { Notification, NotificationMessage } from '../../core/notificationService';
 
 describe('NotificationComponent', () => {
   let component: NotificationComponent;

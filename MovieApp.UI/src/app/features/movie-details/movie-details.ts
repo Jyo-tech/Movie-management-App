@@ -3,7 +3,7 @@ import { MovieService } from '../../core/movie-service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MovieDto } from '../../models/movie.model';
 import { CommonModule } from '@angular/common';
-import { Notification } from '../../core/notification';
+import { Notification } from '../../core/notificationService';
 
 @Component({
   selector: 'app-movie-details',
